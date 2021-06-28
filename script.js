@@ -10,7 +10,7 @@ function generator (length) {
     let result = "";
 
     for (i = 1; i <= Number(length); i ++) {
-        result += str[Math.round(Math.random() * str.length) ]
+        result += str[Math.round(Math.random() * (str.length-1) ) ]
     }
     return result
 }
