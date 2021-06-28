@@ -3,21 +3,22 @@ Vue.component("datatable", {
     data () {
         return {
             currentPage: 0,
-            endRow: 5,
             lengthRow: 5,
             nowData: null
         }
     },
     computed: {
         paginate () {
-            return this.datanya.slice(this.currentPage, this.endRow)
+            return this.datanya.slice(this.currentPage, Number(this.currentPage)+Number(this.lengthRow))
             // console.log(this.datanya.slice(this.currentPage, this.lengthRow))
+        },
+        totalPage () {
+           return this.datanya.length / this.lengthRow
         }
     },
     methods: {
         toThePage(num) {
-            this.currentPage = num
-            this.endRow = num + this.lengthRow
+            this.currentPage = (num-1)*this.lengthRow
         }
     },
     template: `
@@ -49,8 +50,8 @@ Vue.component("datatable", {
             </tr>
             </thead>
             <tbody>
-            <tr v-for="r in paginate">
-                <th scope="row">{{r.id}}</th>
+            <tr v-for="(r, index) in paginate">
+                <th scope="row">{{index+currentPage+1}}</th>
                 <td>{{r.dat1}}</td>
                 <td>{{r.dat2}}</td>
                 <td>{{r.dat3}}</td>
@@ -66,9 +67,12 @@ Vue.component("datatable", {
                 <li class="page-item disabled">
                     <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="#" @click="toThePage(0)">1</a></li>
-                <li class="page-item"><a class="page-link" href="#" @click="toThePage(6)">2</a></li>
-                <li class="page-item"><a class="page-link" href="#" @click="toThePage(11)">3</a></li>
+                <!--li class="page-item"><a class="page-link" href="#" @click="toThePage(0)">1</a></li>
+                <li class="page-item"><a class="page-link" href="#" @click="toThePage(2)">2</a></li>
+                <li class="page-item"><a class="page-link" href="#" @click="toThePage(3)">3</a></li!-->
+                <li v-for="p in totalPage">
+                    <a class="page-link" @click="toThePage(p)" :value="p" href="#">{{p}}</a>
+                </li>
                 <li class="page-item">
                     <a class="page-link" href="#">Next</a>
                 </li>
