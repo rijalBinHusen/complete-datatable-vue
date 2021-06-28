@@ -11,18 +11,22 @@ Vue.component("datatable", {
     computed: {
         paginate () {
             return this.datanya.slice(this.startRow, this.startRow+Number(this.lengthRow))
-            // console.log(this.datanya.slice(this.startRow, this.lengthRow))
         },
         totalPage () {
-            return this.startRow == 0 || this.startRow == 1 ? [1,2,3] : [this.currentPage-1, this.currentPage, this.currentPage+1]
-            //return  [1,2,3,4,5,6]
-        //    this.datanya.length / this.lengthRow
+            return this.startRow == 0 || this.startRow == 1 ? 
+            [1,2,3] : 
+            [this.currentPage-1, this.currentPage, this.currentPage+1 > Math.ceil(this.datanya.length / this.lengthRow) ? 1 : this.currentPage+1]
         }
     },
     methods: {
         toThePage(num) {
             this.startRow = (num-1)*this.lengthRow
             this.currentPage = num
+        },
+        changeRow (num) {
+            this.lengthRow = num
+            this.startRow = 0
+            this.currentPage = 0
         }
     },
     template: `
@@ -31,7 +35,7 @@ Vue.component("datatable", {
 
         <span>
         Show entries
-        <select v-model="lengthRow">
+        <select @change="changeRow($event.target.value)">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -67,26 +71,25 @@ Vue.component("datatable", {
         <!--End of data Table -->
 
         <!--Pagination button -->
+
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-end">
-                <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                <li :class="['page-item', currentPage == 0 || currentPage == 1 ? 'disabled' : '']">
+                    <a class="page-link" @click="toThePage(currentPage-1)" tabindex="-1" aria-disabled="true">Previous</a>
                 </li>
-
-                <!--li :class="{page-item, 'active':currentPage == p}"><a class="page-link" href="#" @click="toThePage(1)">1</a></li>
-                <li class="page-item"><a class="page-link " href="#" @click="toThePage(2)">2</a></li>
-                <li class="page-item"><a class="page-link" href="#" @click="toThePage(3)">3</a></li-->
 
                 <li :class="['page-item', currentPage == p ? 'active' : '' ]" v-for="p in totalPage">
                     <a class="page-link" @click="toThePage(p)" href="#">{{p}}</a>
                 </li>
 
-                <li class="page-item">
-                    <a class="page-link active" href="#">Next</a>
+                <li :class="['page-item', currentPage >= datanya.length / lengthRow ? 'disabled' : '']">
+                    <a class="page-link" @click="toThePage(currentPage+1)" aria-disabled="true">Next</a>
                 </li>
                 </ul>
             </nav>
+
         <!--End of pagination button -->
+
     </div>
     `
 });
