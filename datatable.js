@@ -24,16 +24,16 @@ Vue.component("datatable", {
             
             } else {
                 let result = []
-                for (let i = 0; i < this.datanya.length; i++) {
+                this.datanya.filter( (val) => {
+                    let condition = Boolean(val.dat1.toUpperCase().includes(this.searchInput1.toUpperCase()) && 
+                    val.dat2.toUpperCase().includes(this.searchInput2.toUpperCase()) && 
+                    val.dat3.toUpperCase().includes(this.searchInput3.toUpperCase()))
 
-                    let condition = Boolean(this.datanya[i].dat1.includes(this.searchInput1) && 
-                    this.datanya[i].dat2.includes(this.searchInput2) && 
-                    this.datanya[i].dat3.includes(this.searchInput3))
-
-                    if (condition) { //searchinput1
-                        result.push(this.datanya[i])
+                    if(condition) {
+                        result.push(val)
                     }
-                }
+                })
+
                 this.rowLenght = result.length //total data length
                 this.allPages = Math.ceil(this.rowLenght / this.lengthRow)  //total pages
 
@@ -42,8 +42,8 @@ Vue.component("datatable", {
         },
         totalPage () {
             if(this.allPages > 1) {
-            return this.startRow == 0 || this.startRow == 1 ? 
-            [1,2,3] : 
+            return this.startRow == 1 || this.startRow == 0 ? 
+            this.allPages > 2 ? [1,2,3] : [1,2] : //pages more than 2 or not
             [this.currentPage-1, this.currentPage, this.currentPage+1 > this.allPages ? 1 : this.currentPage+1]
             }
         }
@@ -57,11 +57,8 @@ Vue.component("datatable", {
             this.lengthRow = num
             this.startRow = 0
             this.currentPage = 0
-        }
-    },
-    filters : {
-        searchKey : function () {
-
+        }, searchWord (num) {
+            
         }
     },
     template: `
@@ -104,9 +101,9 @@ Vue.component("datatable", {
             <!--search form-->
             <tr>
                 <td></td>
-                <td><input type="text" placeholder="search" v-model="searchInput1"></td>
-                <td><input type="text" placeholder="search" v-model="searchInput2"></td>
-                <td><input type="text" placeholder="search" v-model="searchInput3"></td>
+                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput1 = $event.target.value; startRow = 0; currentPage = 0"></td>
+                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput2 = $event.target.value; startRow = 0; currentPage = 0"></td>
+                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput3 = $event.target.value; startRow = 0; currentPage = 0"></td>
             </tr>
             <!--end ofsearch form-->
             <tr v-for="(r, index) in showRow">
@@ -130,15 +127,15 @@ Vue.component("datatable", {
             <nav class="col" aria-label="Page navigation example">
                 <ul class="pagination justify-content-end">
                 <li :class="['page-item', currentPage == 0 || currentPage == 1 ? 'disabled' : '']">
-                    <a class="page-link" @click="toThePage(currentPage-1)" tabindex="-1" aria-disabled="true">Previous</a>
+                    <a class="page-link" @click="toThePage(currentPage-1)" aria-disabled="true">Previous</a>
                 </li>
 
                 <li :class="['page-item', currentPage == p || p == 1 && currentPage == 0 ? 'active' : '' ]" v-for="p in totalPage">
                     <a class="page-link" @click="toThePage(p)" href="#">{{p}}</a>
                 </li>
 
-                <li :class="['page-item', currentPage >= allPages ? 'disabled' : '']">
-                    <a class="page-link" @click="toThePage(currentPage+1)" aria-disabled="true">Next</a>
+                <li :class="['page-item', startRow+Number(lengthRow) >= rowLenght ? 'disabled' : '']">
+                    <a class="page-link" @click="toThePage(currentPage == 0 ? 2 : currentPage+1)" aria-disabled="true">Next</a>
                 </li>
                 </ul>
             </nav>
