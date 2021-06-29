@@ -10,11 +10,12 @@ Vue.component("datatable", {
             searchInput2: "",
             searchInput3: "",
             rowLenght: 0,
-            allPages: 0,
+            allPages: 0
         }
     },
     computed: {
         showRow () {
+
             if(this.searchInput1.length < 3 && this.searchInput2.length < 3 && this.searchInput3.length < 3) {
             
             this.rowLenght = this.datanya.length //total data length
@@ -57,8 +58,17 @@ Vue.component("datatable", {
             this.lengthRow = num
             this.startRow = 0
             this.currentPage = 0
-        }, searchWord (num) {
-            
+        }, sortDedata (sortKey) {
+            if (sortKey) {
+                this.datanya.sort(function (a, b) {
+                    let x = a[sortKey].toLowerCase()
+                    let y = b[sortKey].toLowerCase()
+                    if (x < y) { return -1 }
+                    if (x > y) { return 1 }
+                    return 0
+                })
+            }
+            console.log(sortKey)
         }
     },
     template: `
@@ -92,9 +102,9 @@ Vue.component("datatable", {
             <thead>
             <tr class="table-info">
                 <th scope="col">No</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th @click="sortDedata('dat1')" scope="col">First</th>
+                <th @click="sortDedata('dat2')" scope="col">Last</th>
+                <th @click="sortDedata('dat3')" scope="col">Handle</th>
             </tr>
             </thead>
             <tbody>
