@@ -19,7 +19,15 @@
   <body>
     <div class="container-fluid" id="utama">
       
-      <datatable :heads="heads" :datanya="data1"></datatable>
+      <datatable 
+      :heads="heads" 
+      :datanya="data1"
+      :option="['edit', 'delete']"
+      @edit="console.log($event)"
+      @delete="console.log($event)"
+      @detail="console.log($event)"
+      >
+      </datatable>
       
     </div>
     <script type="text/javascript" src="../../FrontEnd/script/vue.js"></script>

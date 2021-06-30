@@ -1,5 +1,5 @@
 Vue.component("datatable", {
-	props: ["datanya", "heads"],
+	props: ["datanya", "heads", "option"],
     data () {
         return {
             startRow: 0,
@@ -156,6 +156,7 @@ Vue.component("datatable", {
                     <span style="font-size:20px; font-weight:bolder;" v-if="sortAsc && nowSort == head">&uarr;</span>
                     {{tulisanBaku(head)}}
                 </th>
+                <th v-if="option.length > 0" scope="col">Option</th>
             </tr>
             </thead>
             <tbody>
@@ -175,6 +176,28 @@ Vue.component("datatable", {
             <tr v-for="(r, index) in showRow">
                 <th scope="row">{{index+startRow+1}}</th>
                 <td v-for="key in heads">{{r[key]}}</td>
+                <td v-if="option.length > 0">
+                    <button 
+                    @click="$emit('edit', r.id)" 
+                    v-if="option.includes('edit')" 
+                    class="btn btn-success">
+                        Edit
+                    </button>
+                    
+                    <button 
+                    @click="$emit('delete', r.id)" 
+                    v-if="option.includes('delete')" 
+                    class="btn btn-danger">
+                        Delete
+                    </button>
+
+                    <button 
+                    @click="$emit('detail', r.id)" 
+                    v-if="option.includes('detail')" 
+                    class="btn btn-warning">
+                        Detail
+                    </button>
+                </td>
             </tr>
             </tbody>
         </table>
