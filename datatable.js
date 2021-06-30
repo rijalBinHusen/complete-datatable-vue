@@ -4,7 +4,7 @@ Vue.component("datatable", {
         return {
             startRow: 0,
             lengthRow: 5,
-            nowData: null,
+            nowSort: null,
             currentPage: 0,
             searchInput: [],
             searchKey: [],
@@ -80,6 +80,7 @@ Vue.component("datatable", {
                     }
                     return 0
                 })
+                this.nowSort = sortKey
             }
         },
         tulisanBaku (str) { //to make inClock become In Clock
@@ -111,7 +112,7 @@ Vue.component("datatable", {
                     this.searchKey = [] 
                 }
             }
-            
+
             this.startRow = 0; 
             this.currentPage = 0
         }
@@ -147,16 +148,21 @@ Vue.component("datatable", {
             <thead>
             <tr class="table-info">
                 <th scope="col">No</th>
-                <th v-for="head in heads" @click="sortDedata(head, sortAsc); sortAsc = !sortAsc" scope="col">{{tulisanBaku(head)}}</th>
+                <th v-for="head in heads" 
+                @click="sortDedata(head, sortAsc); 
+                sortAsc = !sortAsc" 
+                scope="col">
+                    <span style="font-size:20px; font-weight:bolder;" v-if="!sortAsc && nowSort == head">&darr;</span>
+                    <span style="font-size:20px; font-weight:bolder;" v-if="sortAsc && nowSort == head">&uarr;</span>
+                    {{tulisanBaku(head)}}
+                </th>
             </tr>
             </thead>
             <tbody>
+
             <!--search form-->
             <tr>
                 <td></td>
-                <!--td><input type="text" class="form-control" placeholder="Search" @change="searchInput.push($event.target.value); searchKey.push('name'); startRow = 0; currentPage = 0"></td>
-                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput2 = $event.target.value; startRow = 0; currentPage = 0"></td>
-                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput3 = $event.target.value; startRow = 0; currentPage = 0"></td-->
                 <td v-for="key in heads">
                     <input type="text" 
                     class="form-control" 
@@ -165,6 +171,7 @@ Vue.component("datatable", {
                 </td>
             </tr>
             <!--end ofsearch form-->
+
             <tr v-for="(r, index) in showRow">
                 <th scope="row">{{index+startRow+1}}</th>
                 <td v-for="key in heads">{{r[key]}}</td>
