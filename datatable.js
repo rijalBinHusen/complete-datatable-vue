@@ -16,7 +16,6 @@ Vue.component("datatable", {
     computed: {
         showRow () {
 
-            // if(this.searchInput1.length < 3 && this.searchInput2.length < 3 && this.searchInput3.length < 3) {
             if(this.searchInput.length < 1) {
             
             this.rowLenght = this.datanya.length //total data length
@@ -83,7 +82,7 @@ Vue.component("datatable", {
                 })
             }
         },
-        tulisanBaku (str) { //to make inClock becomae In Clock
+        tulisanBaku (str) { //to make inClock become In Clock
             let hasil;
         
             let res = str.replace(/([A-Z])/g,' $1'); //insert space before middle capital letter
@@ -103,9 +102,16 @@ Vue.component("datatable", {
                     this.searchKey.push(key); 
                 }
             } else {
-                this.searchInput = []
-                this.searchKey = [] 
+                if (this.searchKey.includes(key)) {
+                    let position = this.searchKey.indexOf(key) //find the position of key
+                    this.searchInput.splice(position, 1) //delete from searchInput
+                    this.searchKey.splice(position, 1) //delete from searchKey
+                } else {
+                    this.searchInput = []
+                    this.searchKey = [] 
+                }
             }
+            
             this.startRow = 0; 
             this.currentPage = 0
         }
