@@ -1,14 +1,13 @@
 Vue.component("datatable", {
-	props: ["datanya"],
+	props: ["datanya", "heads"],
     data () {
         return {
             startRow: 0,
             lengthRow: 5,
             nowData: null,
             currentPage: 0,
-            searchInput1: "",
-            searchInput2: "",
-            searchInput3: "",
+            searchInput: [],
+            searchKey: [],
             rowLenght: 0,
             allPages: 0,
             sortAsc: true
@@ -17,7 +16,8 @@ Vue.component("datatable", {
     computed: {
         showRow () {
 
-            if(this.searchInput1.length < 3 && this.searchInput2.length < 3 && this.searchInput3.length < 3) {
+            // if(this.searchInput1.length < 3 && this.searchInput2.length < 3 && this.searchInput3.length < 3) {
+            if(this.searchInput.length < 1) {
             
             this.rowLenght = this.datanya.length //total data length
             this.allPages = Math.ceil(this.rowLenght / this.lengthRow) //total pages
@@ -27,11 +27,19 @@ Vue.component("datatable", {
             } else {
                 let result = []
                 this.datanya.filter( (val) => {
-                    let condition = Boolean(val.dat1.toUpperCase().includes(this.searchInput1.toUpperCase()) && 
-                    val.dat2.toUpperCase().includes(this.searchInput2.toUpperCase()) && 
-                    val.dat3.toUpperCase().includes(this.searchInput3.toUpperCase()))
 
-                    if(condition) {
+                    condition = []
+
+                    this.searchKey.map( (key, index) => {
+                        if (val[key].toLowerCase().includes(this.searchInput[index].toLowerCase())) {
+                            condition.push(true)
+                        }
+                        else {
+                            condition.push(false)
+                        }
+                    })
+
+                    if(!condition.includes(false)) {
                         result.push(val)
                     }
                 })
@@ -74,6 +82,32 @@ Vue.component("datatable", {
                     return 0
                 })
             }
+        },
+        tulisanBaku (str) { //to make inClock becomae In Clock
+            let hasil;
+        
+            let res = str.replace(/([A-Z])/g,' $1'); //insert space before middle capital letter
+            hasil = res[0].toUpperCase()
+            hasil += res.slice(1)
+        
+            return hasil
+        },
+        searchWord (val, key) {
+            if (val) {
+                if (this.searchKey.includes(key)) {
+                    let position = this.searchKey.indexOf(key) //find the position of key
+                    this.searchInput.splice(position, 1) //delete him
+                    this.searchInput.splice(position, 0, val) //insert the new key word
+                } else {
+                    this.searchInput.push(val); 
+                    this.searchKey.push(key); 
+                }
+            } else {
+                this.searchInput = []
+                this.searchKey = [] 
+            }
+            this.startRow = 0; 
+            this.currentPage = 0
         }
     },
     template: `
@@ -107,25 +141,27 @@ Vue.component("datatable", {
             <thead>
             <tr class="table-info">
                 <th scope="col">No</th>
-                <th @click="sortDedata('dat1', sortAsc); sortAsc = !sortAsc" scope="col">First</th>
-                <th @click="sortDedata('dat2', sortAsc); sortAsc = !sortAsc" scope="col">Last</th>
-                <th @click="sortDedata('dat3', sortAsc); sortAsc = !sortAsc" scope="col">Handle</th>
+                <th v-for="head in heads" @click="sortDedata(head, sortAsc); sortAsc = !sortAsc" scope="col">{{tulisanBaku(head)}}</th>
             </tr>
             </thead>
             <tbody>
             <!--search form-->
             <tr>
                 <td></td>
-                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput1 = $event.target.value; startRow = 0; currentPage = 0"></td>
+                <!--td><input type="text" class="form-control" placeholder="Search" @change="searchInput.push($event.target.value); searchKey.push('name'); startRow = 0; currentPage = 0"></td>
                 <td><input type="text" class="form-control" placeholder="Search" @change="searchInput2 = $event.target.value; startRow = 0; currentPage = 0"></td>
-                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput3 = $event.target.value; startRow = 0; currentPage = 0"></td>
+                <td><input type="text" class="form-control" placeholder="Search" @change="searchInput3 = $event.target.value; startRow = 0; currentPage = 0"></td-->
+                <td v-for="key in heads">
+                    <input type="text" 
+                    class="form-control" 
+                    placeholder="Search" 
+                    @change="searchWord($event.target.value, key)">
+                </td>
             </tr>
             <!--end ofsearch form-->
             <tr v-for="(r, index) in showRow">
                 <th scope="row">{{index+startRow+1}}</th>
-                <td>{{r.dat1}}</td>
-                <td>{{r.dat2}}</td>
-                <td>{{r.dat3}}</td>
+                <td v-for="key in heads">{{r[key]}}</td>
             </tr>
             </tbody>
         </table>

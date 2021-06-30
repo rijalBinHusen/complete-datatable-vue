@@ -1,7 +1,8 @@
 new Vue({
 	el: "#utama",
     data: {
-        data1:  dummyData()
+        data1:  dummyData(),
+        heads: ["name", "inClock", "outClock"]
     }
 })
 
@@ -19,7 +20,7 @@ function dummyData () {
     let result = []
 
     for (let i = 0; i < 150; i ++) {
-        result.push({id: generator(9), dat1: generatorNama(), dat2: generatorClock(), dat3: generatorClock()})
+        result.push({id: generator(9), name: generatorNama(), inClock: generatorClock(), outClock: generatorClock()})
     }
 
     return result
