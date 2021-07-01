@@ -3,6 +3,11 @@ new Vue({
     data: {
         data1:  dummyData(),
         heads: ["id", "name", "inClock", "outClock"]
+    },
+    methods: {
+        show (ev) {
+            console.log(ev)
+        }
     }
 })
 

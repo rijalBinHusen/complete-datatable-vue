@@ -30,12 +30,13 @@ Vue.component("datatable", {
                     condition = []
 
                     this.searchKey.map( (key, index) => {
-                        if (val[key].toLowerCase().includes(this.searchInput[index].toLowerCase())) {
-                            condition.push(true)
+
+                        if(isNaN(val[key])) { //if the value is string not a number
+                            val[key].toLowerCase().includes(this.searchInput[index].toLowerCase()) ? condition.push(true) : condition.push(false)
+                        } else {
+                            val[key] == this.searchInput[index] ? condition.push(true) : condition.push(false)
                         }
-                        else {
-                            condition.push(false)
-                        }
+                        
                     })
 
                     if(!condition.includes(false)) {
