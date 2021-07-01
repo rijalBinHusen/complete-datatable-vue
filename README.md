@@ -17,7 +17,7 @@ so... if you want to use this component, just grab the datatable.js to your proj
 
 <!--Call the component-->
 <datatable 
-  :heads="heads" 
+  :heads="heads" <br>
   :datanya="data1" 
   :option="['edit', 'delete', 'detail']" 
   :keydata="'id'" 
@@ -30,7 +30,7 @@ so... if you want to use this component, just grab the datatable.js to your proj
 
 <!--Call the component-->
 
-informatin :
+information :
 
 :heads = should be array and contain the key of your object and also used as the head of data table like ['id', 'name', 'lastName']
 
