@@ -2,7 +2,7 @@ new Vue({
 	el: "#utama",
     data: {
         data1:  dummyData(),
-        heads: ["name", "inClock", "outClock"]
+        heads: ["id", "name", "inClock", "outClock"]
     }
 })
 

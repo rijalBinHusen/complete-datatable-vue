@@ -1,5 +1,5 @@
 Vue.component("datatable", {
-	props: ["datanya", "heads", "option"],
+	props: ["datanya", "heads", "option","keydata"],
     data () {
         return {
             startRow: 0,
@@ -133,12 +133,8 @@ Vue.component("datatable", {
                 </select>
             </nav>
             
-            <!--nav class="col">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search word" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">search</button>
-                </div>
-            </nav-->
+            <nav class="col">
+            </nav>
         </div>
     <!-- End of pagination length -->
 
@@ -178,21 +174,21 @@ Vue.component("datatable", {
                 <td v-for="key in heads">{{r[key]}}</td>
                 <td v-if="option.length > 0">
                     <button 
-                    @click="$emit('edit', r.id)" 
+                    @click="$emit('edit', r[keydata])" 
                     v-if="option.includes('edit')" 
                     class="btn btn-success">
                         Edit
                     </button>
                     
                     <button 
-                    @click="$emit('delete', r.id)" 
+                    @click="$emit('delete', r[keydata])" 
                     v-if="option.includes('delete')" 
                     class="btn btn-danger">
                         Delete
                     </button>
 
                     <button 
-                    @click="$emit('detail', r.id)" 
+                    @click="$emit('detail', r[keydata])" 
                     v-if="option.includes('detail')" 
                     class="btn btn-warning">
                         Detail
