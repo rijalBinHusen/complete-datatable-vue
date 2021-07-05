@@ -70,8 +70,12 @@ Vue.component("datatable", {
         }, sortDedata (sortKey, sortAsc) {
             if (sortKey) {
                 this.datanya.sort(function (a, b) {
-                    let x = a[sortKey].toLowerCase()
-                    let y = b[sortKey].toLowerCase()
+                    let x = a[sortKey]
+                    let y = b[sortKey]
+                    if(isNaN(a[sortKey])) {
+                        x = a[sortKey].toLowerCase()
+                        y = b[sortKey].toLowerCase()
+                    } 
                     if(sortAsc) {
                         if (x < y) { return -1 }
                         if (x > y) { return 1 }
