@@ -177,6 +177,7 @@ Vue.component("datatable", {
                 <td v-for="key in heads">
                     <input type="text" 
                     class="form-control" 
+                    :value="[deData.searchKey.includes(key) ? deData.searchInput[deData.searchKey.indexOf(key)] : '']"
                     placeholder="Search" 
                     @change="searchWord($event.target.value, key)">
                 </td>
